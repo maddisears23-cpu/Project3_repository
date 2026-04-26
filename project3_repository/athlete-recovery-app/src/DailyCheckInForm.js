@@ -2,6 +2,7 @@ import React, { useState } from "react";
 import {
   calculateReadinessScore,
   getReadinessStatus,
+  getRecoveryMessage,
 } from "./readinessCalculator";
 
 function DailyCheckInForm({ onSubmitEntry }) {
@@ -14,6 +15,14 @@ function DailyCheckInForm({ onSubmitEntry }) {
     intensity: 3,
   });
 
+  const fieldDescriptions = {
+    sleep: "How well did you sleep last night? (1 = very poor, 5 = excellent)",
+    soreness: "How sore does your body feel today? (1 = none, 5 = extreme)",
+    energy: "How energized do you feel right now? (1 = very low, 5 = excellent)",
+    hydration: "How hydrated do you feel today? (1 = dehydrated, 5 = excellent)",
+    mood: "How do you feel mentally today? (1 = poor, 5 = excellent)",
+    intensity: "How demanding was your recent workload? (1 = light, 5 = very intense)",
+  };
   const handleChange = (e) => {
     setFormData({
       ...formData,
@@ -31,7 +40,8 @@ function DailyCheckInForm({ onSubmitEntry }) {
       ...formData,
       score,
       status,
-      date: new Date().toISOString(),
+      message: getRecoveryMessage (score),
+      date: new Date().toLocaleString(),
     };
 
     onSubmitEntry(entry);
@@ -40,22 +50,25 @@ function DailyCheckInForm({ onSubmitEntry }) {
   return (
     <form onSubmit={handleSubmit}>
       {Object.keys(formData).map((field) => (
-        <div key={field} className="mb-3">
-          <label className="form-label text-capitalize">{field}</label>
-          <select
-            className="form-select"
-            name={field}
-            value={formData[field]}
-            onChange={handleChange}
-          >
-            {[1, 2, 3, 4, 5].map((num) => (
-              <option key={num} value={num}>
-                {num}
-              </option>
-            ))}
-          </select>
-        </div>
+  <div key={field} className="mb-4">
+    <p className="form-label fw-semibold mb-2">
+      {fieldDescriptions[field]}
+    </p>
+
+    <select
+      className="form-select"
+      name={field}
+      value={formData[field]}
+      onChange={handleChange}
+    >
+      {[1, 2, 3, 4, 5].map((num) => (
+        <option key={num} value={num}>
+          {num}
+        </option>
       ))}
+    </select>
+  </div>
+))}
 
       <button type="submit" className="btn btn-primary">
         Submit Check-In
