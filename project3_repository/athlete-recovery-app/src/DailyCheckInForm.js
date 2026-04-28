@@ -1,4 +1,7 @@
 import React, { useState } from "react";
+import { db } from './firebase';
+import { colloection, addDoc } from 'firebase/firestore';
+
 import {
   calculateReadinessScore,
   getReadinessStatus,
@@ -30,7 +33,7 @@ function DailyCheckInForm({ onSubmitEntry }) {
     });
   };
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
 
     const score = calculateReadinessScore(formData);
@@ -43,8 +46,13 @@ function DailyCheckInForm({ onSubmitEntry }) {
       message: getRecoveryMessage (score),
       date: new Date().toLocaleString(),
     };
-
-    onSubmitEntry(entry);
+    try{
+      const docRef = await addDoc(collection(db, 'checkIns'), entry)
+      console.log("Document written with ID: ", DOMRectReadOnly.id)
+      onSubmitEntry(entry);
+    } catch(e){
+      console.error("Error with data: ", e)
+    }
   };
 
   return (
