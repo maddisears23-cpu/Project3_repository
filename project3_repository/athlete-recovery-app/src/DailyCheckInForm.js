@@ -19,7 +19,7 @@ function DailyCheckInForm({ onSubmitEntry }) {
   });
 
   const [entries, setEntries] = useState([]);
-  
+
   const fieldDescriptions = {
     sleep: "How well did you sleep last night? (1 = very poor, 5 = excellent)",
     soreness: "How sore does your body feel today? (1 = none, 5 = extreme)",
@@ -48,10 +48,10 @@ function DailyCheckInForm({ onSubmitEntry }) {
       message: getRecoveryMessage(score),
       date: new Date().toLocaleString(),
     };
+    onSubmitEntry(entry);
     try{
       const docRef = await addDoc(collection(db, 'checkIns'), entry)
-      console.log("Document written with ID: ", DOMRectReadOnly.id)
-      onSubmitEntry(entry);
+      console.log("Document written with ID: ", docRef.id)
     } catch(e){
       console.error("Error with data: ", e)
     }
