@@ -1,6 +1,4 @@
-import React, { useState, useEffect } from "react";
-import { db } from './firebase';
-import { collection, addDoc, getDocs } from 'firebase/firestore';
+import React, { useState } from "react";
 
 import {
   calculateReadinessScore,
@@ -18,8 +16,6 @@ function DailyCheckInForm({ onSubmitEntry }) {
     intensity: 3,
   });
 
-  const [entries, setEntries] = useState([]);
-
   const fieldDescriptions = {
     sleep: "How well did you sleep last night? (1 = very poor, 5 = excellent)",
     soreness: "How sore does your body feel today? (1 = none, 5 = extreme)",
@@ -28,6 +24,7 @@ function DailyCheckInForm({ onSubmitEntry }) {
     mood: "How do you feel mentally today? (1 = poor, 5 = excellent)",
     intensity: "How demanding was your recent workload? (1 = light, 5 = very intense)",
   };
+
   const handleChange = (e) => {
     setFormData({
       ...formData,
@@ -35,7 +32,7 @@ function DailyCheckInForm({ onSubmitEntry }) {
     });
   };
 
-  const handleSubmit = async (e) => {
+  const handleSubmit = (e) => {
     e.preventDefault();
 
     const score = calculateReadinessScore(formData);
@@ -48,30 +45,9 @@ function DailyCheckInForm({ onSubmitEntry }) {
       message: getRecoveryMessage(score),
       date: new Date().toLocaleString(),
     };
+
     onSubmitEntry(entry);
-    try{
-      const docRef = await addDoc(collection(db, 'checkIns'), entry)
-      console.log("Document written with ID: ", docRef.id)
-    } catch(e){
-      console.error("Error with data: ", e)
-    }
   };
-
-  const fetchEntries = async () => {
-    console.log("Fetch Entries")
-    try{
-    const querySnapshot = await getDocs(collection(db, 'checkIns'));
-    const entriesArray = querySnapshot.docs.map(doc => ({ id: doc.id, ...doc.data(),}))
-    console.log("All entries: ", entriesArray)
-    setEntries(entriesArray);
-  } catch (error) {
-    console.error("Error:", error)
-  }
-  }
-
-  useEffect(() => {
-    fetchEntries()
-  }, [])
 
   return (
     <div className="card shadow p-4">
@@ -80,10 +56,10 @@ function DailyCheckInForm({ onSubmitEntry }) {
       <form onSubmit={handleSubmit}>
         {Object.keys(formData).map((field) => (
           <div key={field} className="mb-4">
-            <label className ="form-label fw-semibold">
+            <label className="form-label fw-semibold">
               {fieldDescriptions[field]}: {formData[field]}
             </label>
-  
+
             <select
               className="form-select"
               name={field}
@@ -99,7 +75,7 @@ function DailyCheckInForm({ onSubmitEntry }) {
           </div>
         ))}
 
-        <button type="submit" className="btn btn-primary">
+        <button type="submit" className="btn btn-primary w-100">
           Submit Check-In
         </button>
       </form>
