@@ -3,23 +3,33 @@ import React from "react";
 function ReadinessDisplay({ entry }) {
   if (!entry) return null;
 
-  const color =
+  const bgColor =
     entry.status === "Green"
-      ? "success"
+      ? "#4CAF50"
       : entry.status === "Yellow"
-      ? "warning"
-      : "danger";
+      ? "#FFC107"
+      : "#DC3545";
+
+  const textColor = entry.status === "Yellow" ? "#333" : "#fff";
+
+  const emoji =
+    entry.status === "Green"
+      ? "✅"
+      : entry.status === "Yellow"
+      ? "⚠️"
+      : "🚨";
 
   return (
-    <div className="card mt-4">
+    <div
+      className="card mt-4"
+      style={{ backgroundColor: bgColor, color: textColor, border: "none" }}
+    >
       <div className="card-body">
         <h3>Today's Readiness</h3>
 
         <p className="fs-4 mb-1">Score: {entry.score}/100</p>
 
-        <span className={`badge bg-${color} fs-6 mb-3`}>
-          {entry.status}
-        </span>
+        <p style={{ fontSize: "2rem" }}>{emoji}</p>
 
         <p className="mt-3">{entry.message}</p>
       </div>

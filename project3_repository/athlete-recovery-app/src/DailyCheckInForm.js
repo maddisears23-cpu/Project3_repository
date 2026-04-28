@@ -43,7 +43,7 @@ function DailyCheckInForm({ onSubmitEntry }) {
       ...formData,
       score,
       status,
-      message: getRecoveryMessage (score),
+      message: getRecoveryMessage(score),
       date: new Date().toLocaleString(),
     };
     try{
@@ -66,32 +66,36 @@ function DailyCheckInForm({ onSubmitEntry }) {
   }, [])
 
   return (
-    <form onSubmit={handleSubmit}>
-      {Object.keys(formData).map((field) => (
-  <div key={field} className="mb-4">
-    <p className="form-label fw-semibold mb-2">
-      {fieldDescriptions[field]}
-    </p>
+    <div className="card shadow p-4">
+      <h3 className="text-center mb-4">Daily Check-In</h3>
 
-    <select
-      className="form-select"
-      name={field}
-      value={formData[field]}
-      onChange={handleChange}
-    >
-      {[1, 2, 3, 4, 5].map((num) => (
-        <option key={num} value={num}>
-          {num}
-        </option>
-      ))}
-    </select>
-  </div>
-))}
+      <form onSubmit={handleSubmit}>
+        {Object.keys(formData).map((field) => (
+          <div key={field} className="mb-4">
+            <label className ="form-label fw-semibold">
+              {fieldDescriptions[field]}: {formData[field]}
+            </label>
+  
+            <select
+              className="form-select"
+              name={field}
+              value={formData[field]}
+              onChange={handleChange}
+            >
+              {[1, 2, 3, 4, 5].map((num) => (
+                <option key={num} value={num}>
+                  {num}
+                </option>
+              ))}
+            </select>
+          </div>
+        ))}
 
-      <button type="submit" className="btn btn-primary">
-        Submit Check-In
-      </button>
-    </form>
+        <button type="submit" className="btn btn-primary">
+          Submit Check-In
+        </button>
+      </form>
+    </div>
   );
 }
 
