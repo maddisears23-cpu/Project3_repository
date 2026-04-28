@@ -18,6 +18,8 @@ function DailyCheckInForm({ onSubmitEntry }) {
     intensity: 3,
   });
 
+  const [entries, setEntries] = useState([]);
+  
   const fieldDescriptions = {
     sleep: "How well did you sleep last night? (1 = very poor, 5 = excellent)",
     soreness: "How sore does your body feel today? (1 = none, 5 = extreme)",
