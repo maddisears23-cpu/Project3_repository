@@ -58,9 +58,15 @@ function DailyCheckInForm({ onSubmitEntry }) {
   };
 
   const fetchEntries = async () => {
+    console.log("Fetch Entries")
+    try{
     const querySnapshot = await getDocs(collection(db, 'checkIns'));
     const entriesArray = querySnapshot.docs.map(doc => ({ id: doc.id, ...doc.data(),}))
+    console.log("All entries: ", entriesArray)
     setEntries(entriesArray);
+  } catch (error) {
+    console.error("Error:", error)
+  }
   }
 
   useEffect(() => {

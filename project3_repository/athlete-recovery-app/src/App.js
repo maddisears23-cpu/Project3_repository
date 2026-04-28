@@ -3,14 +3,31 @@ import DailyCheckInForm from "./DailyCheckInForm";
 import ReadinessDisplay from "./ReadinessDisplay";
 import EntryHistory from "./EntryHistory";
 import TrendChart from "./TrendChart";
+import { useEffect } from 'react';
+import { db } from './firebase';
+import { collection, getDocs } from 'firebase/firestore';
 
 function App() {
   const [entry, setEntry] = useState(null);
   const [entries, setEntries] = useState([]);
 
+  useEffect(() => {
+    const loadEntries = async () => {
+      try {
+        const querySnapshot = await getDocs(collection(db, 'checkIns'))
+        const entriesArray = querySnapshot.docs.map(doc => ({id: doc.id, ...doc.data()}))
+        setEntries(entriesArray)
+        console.log("Loaded entries:", entriesArray)
+      } catch(error) {
+        console.error("Error with entries:", error)
+      }
+    }
+    loadEntries()
+  }, [])
+
   const handleSubmitEntry = (newEntry) => {
     setEntry(newEntry);
-    setEntries([newEntry, ...entries]);
+    setEntries((prev) => [newEntry, ...prev]);
   };
 
   return (
