@@ -1,6 +1,7 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { db } from './firebase';
-import { collection, addDoc } from 'firebase/firestore';
+import { calculateReadinessScore, getReadinessStatus, getRecoveryMessage } from "./readinessCalculator";
+import { collection, addDoc, getDocs } from 'firebase/firestore';
 
 import {
   calculateReadinessScore,
@@ -64,7 +65,7 @@ function DailyCheckInForm({ onSubmitEntry }) {
   useEffect(() => {
     fetchEntries()
   }, [])
-  
+
   return (
     <form onSubmit={handleSubmit}>
       {Object.keys(formData).map((field) => (
