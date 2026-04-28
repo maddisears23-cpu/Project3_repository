@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import { db } from './firebase';
-import { colloection, addDoc } from 'firebase/firestore';
+import { collection, addDoc } from 'firebase/firestore';
 
 import {
   calculateReadinessScore,
